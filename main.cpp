@@ -117,9 +117,34 @@ void printPath(pair<int,int> exitcell,
 // STUDENTS IMPLEMENT DFS HERE
 // Add arguments, return type, and logic
 // ----------------------------------------------------------
-// bool dfs(……) {
-//     // Your code here
-// }
+bool dfs(int r, int c, const vector<vector<int>>& maze, vector<vector<bool>>& visited, vector<vector<int>>& parent_r, vector<vector<int>>& parent_c, int exit_r, int exit_c) {
+    int n = maze.size();
+    int M = maze[0].size();
+    if (r == exit_r && c == exit_c) {
+        return true;
+    }
+    visited[r][c] = true;
+
+    for (int i = 0; i < 4; i++) {
+        int nr = r+dr[i];
+        int nc = c+dc[i];
+        if (nr < 0 || nr >= n || nc < 0 || nc >= M) {
+            continue;
+        }
+        if (maze[nr][nc] == 1) {
+            continue;
+        }
+        if (visited[nr][nc] == true) {
+            continue;
+        }
+        parent_c[nr][nc] = c;
+        parent_r[nr][nc] = r;
+        if (dfs(nr,nc,maze ,visited,parent_r,parent_c,exit_r,exit_c)==true) {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 // ----------------------------------------------------------
@@ -158,6 +183,7 @@ int main() {
     // ------------------------------------------------------
     // STUDENT WORK:
     // Call your DFS, track visited, and fill parent_r and parent_c
+    bool found = dfs(ent_r,ent_c,maze,visited,parent_r,parent_c,exit_r,exit_c);
     // ------------------------------------------------------
     // bool found = dfs(ent_r, ent_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
 
@@ -165,11 +191,11 @@ int main() {
     // STUDENT WORK:
     // If found, print the path
     // ------------------------------------------------------
-    // if (found) {
-    //     printPath(exitcell, parent_r, parent_c, ent_r, ent_c);
-    // } else {
-    //     cout << "\nNo path exists.\n";
-    // }
+    if (found) {
+        printPath(exitcell, parent_r, parent_c, ent_r, ent_c);
+    } else {
+        cout << "\nNo path exists.\n";
+    }
 
     return 0;
 }
